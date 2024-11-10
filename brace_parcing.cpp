@@ -1,19 +1,27 @@
 #include <iostream>
-#include "vector.cpp"
 #include "Binary_Tree.cpp"
 
 int main()
 {
-    Binary_Tree<int> Tree;
-    Vector<char> input(1);
-    char c;
-    std::cin >> c;
-    for (int i = 0; c != '\n'; i++)
+    std::string input;
+    getline(std::cin, input);
+    if (input[0] != '(')
     {
-        std::cin >> c;
-        input.add(i, c);
+        std::cout << "Error!" << std::endl;
+        return 1;
     }
-    for (int i = 0; i < input.get_size(); i++)
+    input.erase(0, 1);
+    int root = 0;
+    if (input.find('(') > 5)
+    {
+        std::cout << "Error" << std::endl;
+        return 2;
+    }
+    for (int i = 0; i < input.find('('); i++)
+        root = root*10 + input[i]-'0';
+    input.erase(0, input.find('('));
+    Binary_Tree<int> Tree(root);
+    for (int i = 0; i < input.size(); i++)
     {
         
     }
