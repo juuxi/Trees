@@ -1,4 +1,5 @@
 #include <cstddef>
+#include <iostream>
 
 template <typename T>
 struct Binary_Tree_node
@@ -12,16 +13,19 @@ struct Binary_Tree_node
 template <typename T>
 class Binary_Tree 
 {
-    Binary_Tree_node* root;
+    Binary_Tree_node<T>* root;
     size_t height;
 public:
-    Binary_Tree();
-    deep_traverse();
+    Binary_Tree() : root(nullptr), height(0) {}
+    void deep_traverse(Binary_Tree_node<T>*);
 };
 
 template <typename T>
-Binary_Tree<T>::Binary_Tree()
+void Binary_Tree<T>::deep_traverse(Binary_Tree_node<T>* curr) //central
 {
-    root = nullptr;
-    height = 0;
+    if (curr->left_child)
+        deep_traverse(curr->left_child);
+    std::cout << curr->key;
+    if (curr->right_child)
+        deep_traverse(curr->right_child);
 }
