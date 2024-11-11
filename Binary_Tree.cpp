@@ -8,6 +8,8 @@ struct Binary_Tree_node
     Binary_Tree_node* parent;
     Binary_Tree_node* left_child;
     Binary_Tree_node* right_child;
+    Binary_Tree_node(T _key) : key(_key), parent(nullptr), left_child(nullptr), right_child(nullptr) {}
+    Binary_Tree_node(T _key, Binary_Tree_node* _parent) : key(_key), parent(_parent), left_child(nullptr), right_child(nullptr) {}
 };
 
 template <typename T>
@@ -26,11 +28,7 @@ public:
 template <typename T>
 Binary_Tree<T>::Binary_Tree(T _key)
 {
-    root = new Binary_Tree_node<T>;
-    root->left_child = nullptr;
-    root->right_child = nullptr;
-    root->parent = nullptr;
-    root->key = _key;
+    root = new Binary_Tree_node<T>(_key);
 }
 
 template <typename T>
@@ -46,19 +44,15 @@ void Binary_Tree<T>::deep_traverse(Binary_Tree_node<T>* curr) //central
 template <typename T>
 Binary_Tree_node<T>* Binary_Tree<T>::add_left_child(Binary_Tree_node<T>* curr, T _key)
 {
-    Binary_Tree_node<T>* new_child = new Binary_Tree_node<T>;
+    Binary_Tree_node<T>* new_child = new Binary_Tree_node<T>(_key, curr);
     curr->left_child = new_child;
-    new_child->parent = curr;
-    new_child->key = _key;
     return new_child;
 }
 
 template <typename T>
 Binary_Tree_node<T>* Binary_Tree<T>::add_right_child(Binary_Tree_node<T>* curr, T _key)
 {
-    Binary_Tree_node<T>* new_child = new Binary_Tree_node<T>;
+    Binary_Tree_node<T>* new_child = new Binary_Tree_node<T>(_key, curr);
     curr->right_child = new_child;
-    new_child->parent = curr;
-    new_child->key = _key;
     return new_child;
 }
