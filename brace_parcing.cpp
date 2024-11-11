@@ -30,7 +30,29 @@ int main()
     int curr_node_val = 0;
     for (int i = 0; i < input.size(); i++)
     {
-        
+        if (input[i] = '(')
+        {
+            stack.push_front('(');
+            Tree.add_left_child(nullptr, curr_node_val);
+        }
+        else if (input[i] = ')')
+        {
+            if (stack.get_value() != '(')
+            {
+                std::cout << "Error!";
+                return 2;
+            }
+            else 
+                Tree.add_left_child(nullptr, curr_node_val);
+        }
+        else if (input[i] >= '0' && input[i] <= '9')
+            curr_node_val = curr_node_val * 10 + input[i]-'0';
+        else 
+        {
+            std::cout << "Error!";
+            return 2;
+        }
+
     }
     return 0;
 }
