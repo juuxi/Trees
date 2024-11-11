@@ -23,6 +23,8 @@ public:
     void deep_traverse(Binary_Tree_node<T>*);
     Binary_Tree_node<T>* add_left_child(Binary_Tree_node<T>*, T);
     Binary_Tree_node<T>* add_right_child(Binary_Tree_node<T>*, T);
+    Binary_Tree_node<T>* get_parent (Binary_Tree_node<T>*);
+    Binary_Tree_node<T>* get_root ();
 };
 
 template <typename T>
@@ -55,4 +57,16 @@ Binary_Tree_node<T>* Binary_Tree<T>::add_right_child(Binary_Tree_node<T>* curr, 
     Binary_Tree_node<T>* new_child = new Binary_Tree_node<T>(_key, curr);
     curr->right_child = new_child;
     return new_child;
+}
+
+template <typename T>
+Binary_Tree_node<T>* Binary_Tree<T>::get_parent (Binary_Tree_node<T>* curr)
+{
+    return curr->parent;
+}
+
+template <typename T>
+Binary_Tree_node<T>* Binary_Tree<T>::get_root ()
+{
+    return root;
 }
