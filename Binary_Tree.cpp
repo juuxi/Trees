@@ -1,5 +1,4 @@
 #include <cstddef>
-#include <iostream>
 
 template <typename T>
 struct Binary_Tree_node
@@ -16,9 +15,8 @@ template <typename T>
 class Binary_Tree 
 {
     Binary_Tree_node<T>* root;
-    size_t height;
 public:
-    Binary_Tree() : root(nullptr), height(0) {}
+    Binary_Tree() : root(nullptr) {}
     Binary_Tree(T);
     void deep_traverse(Binary_Tree_node<T>*);
     Binary_Tree_node<T>* add_left_child(Binary_Tree_node<T>*, T);
