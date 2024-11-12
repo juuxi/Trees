@@ -29,8 +29,8 @@ int main()
     input.erase(0, input.find('('));
     stack.push_front('(');
     input.erase(0, 1);
-    Binary_Tree<int> Tree(root);
-    Binary_Tree_node<int>* curr_parent = Tree.get_root();
+    Binary_Tree<int> Binary_Tree(root);
+    Binary_Tree_node<int>* curr_parent = Binary_Tree.get_root();
     int curr_node_val = 0;
     bool right_child_flag = false;
     for (int i = 0; i < input.size(); i++)
@@ -41,9 +41,9 @@ int main()
             if (input[i-1] != '(' && input[i-1] != ')')
             {
                 if (right_child_flag)
-                    curr_parent = Tree.add_right_child(curr_parent, curr_node_val);
+                    curr_parent = Binary_Tree.add_right_child(curr_parent, curr_node_val);
                 else
-                    curr_parent = Tree.add_left_child(curr_parent, curr_node_val);
+                    curr_parent = Binary_Tree.add_left_child(curr_parent, curr_node_val);
                 right_child_flag = false;
                 curr_node_val = 0;
             }
@@ -63,14 +63,14 @@ int main()
                 if (input[i-1] != '(' && input[i-1] != ')')
                 {
                     if (right_child_flag)
-                        curr_parent = Tree.add_right_child(curr_parent, curr_node_val);
+                        curr_parent = Binary_Tree.add_right_child(curr_parent, curr_node_val);
                     else
-                        curr_parent = Tree.add_left_child(curr_parent, curr_node_val);
+                        curr_parent = Binary_Tree.add_left_child(curr_parent, curr_node_val);
                     right_child_flag = false;
                     curr_node_val = 0;
                 }
                 stack.pop_front();
-                curr_parent = Tree.get_parent(curr_parent);
+                curr_parent = Binary_Tree.get_parent(curr_parent);
             }
         }
 
@@ -88,5 +88,11 @@ int main()
         std::cout << "Error!" << std::endl;
         return 2;
     }
+    Vector<int> RB_input(1);
+    RB_Tree<int> RB_Tree;
+    Binary_Tree.deep_traverse(Binary_Tree.get_root(), RB_input);
+    std::cout << std::endl;
+    for (int i = 0; i < RB_input.get_size(); i++)
+        RB_Tree.add(nullptr, RB_input[i]);
     return 0;
 }

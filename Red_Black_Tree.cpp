@@ -8,9 +8,9 @@ struct RB_Tree_node
     RB_Tree_node* parent;
     RB_Tree_node* left_child;
     RB_Tree_node* right_child;
-    RB_Tree_node(T _key) : key(_key), parent(nullptr), left_child(nullptr), right_child(nullptr), color("R") {}
+    RB_Tree_node(T _key) : key(_key), parent(nullptr), left_child(nullptr), right_child(nullptr), color('R') {}
     RB_Tree_node(T _key, RB_Tree_node* _parent) : key(_key), parent(_parent), 
-    left_child(nullptr), right_child(nullptr), color("R") {}
+    left_child(nullptr), right_child(nullptr), color('R') {}
 };
 
 template <typename T>
@@ -30,7 +30,7 @@ template <typename T>
 RB_Tree<T>::RB_Tree(T _key)
 {
     root = new RB_Tree_node<T>(_key);
-    root->color = "B";
+    root->color = 'B';
 }
 
 template <typename T>
@@ -52,10 +52,12 @@ RB_Tree_node<T>* RB_Tree<T>::add_right_child(RB_Tree_node<T>* curr, T _key)
 template <typename T>
 RB_Tree_node<T>* RB_Tree<T>::add(RB_Tree_node<T>* curr, T _key)
 {
+    if (curr == nullptr)
+        curr = root;
     if (root == nullptr)
     {
         root = new RB_Tree_node<T>(_key);
-        root->color = "B";
+        root->color = 'B';
         return root;
     }
     
@@ -77,11 +79,12 @@ RB_Tree_node<T>* RB_Tree<T>::add(RB_Tree_node<T>* curr, T _key)
             add(curr->right_child, _key);
     }
 
-    new_node->color = "R";
-    if (new_node->parent->color == "B")
+    new_node->color = 'R';
+    if (new_node->parent->color == 'B')
         return new_node;
     else 
     {
+        return new_node;
         //red-red violation
     }
 }
