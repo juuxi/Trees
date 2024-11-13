@@ -24,6 +24,10 @@ public:
 private:
     RB_Tree_node<T>* add_left_child(RB_Tree_node<T>*, T);
     RB_Tree_node<T>* add_right_child(RB_Tree_node<T>*, T);
+    void small_left_turn(RB_Tree_node<T>*);
+    void small_right_turn(RB_Tree_node<T>*);
+    void big_left_turn(RB_Tree_node<T>*);
+    void big_right_turn(RB_Tree_node<T>*);
 };
 
 template <typename T>
@@ -87,4 +91,42 @@ RB_Tree_node<T>* RB_Tree<T>::add(RB_Tree_node<T>* curr, T _key)
         return new_node;
         //red-red violation
     }
+}
+
+template <typename T>
+void RB_Tree<T>::small_left_turn(RB_Tree_node<T>* curr)
+{
+    RB_Tree_node<T>* parent = curr->parent; 
+    RB_Tree_node<T>* grandparent = parent->parent;
+    curr->parent = grandparent;
+    parent->right_child = curr->left_child;
+    curr->left_child = parent;
+    if (!grandparent)
+        root = curr;
+}
+
+template <typename T>
+void RB_Tree<T>::small_right_turn(RB_Tree_node<T>* curr)
+{
+    RB_Tree_node<T>* parent = curr->parent; 
+    RB_Tree_node<T>* grandparent = parent->parent;
+    curr->parent = grandparent;
+    parent->left_child = curr->right_child;
+    curr->right_child = parent;
+    if (!grandparent)
+        root = curr;
+}
+
+template <typename T>
+void RB_Tree<T>::big_left_turn(RB_Tree_node<T>* curr)
+{
+    small_right_turn(curr);
+    small_left_turn(curr);
+}
+
+template <typename T>
+void RB_Tree<T>::big_left_turn(RB_Tree_node<T>* curr)
+{
+    small_left_turn(curr);
+    small_right_turn(curr);
 }
