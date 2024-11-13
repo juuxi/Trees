@@ -28,6 +28,7 @@ private:
     void small_right_turn(RB_Tree_node<T>*);
     void big_left_turn(RB_Tree_node<T>*);
     void big_right_turn(RB_Tree_node<T>*);
+    void red_red_violation(RB_Tree_node<T>*);
 };
 
 template <typename T>
@@ -83,13 +84,90 @@ RB_Tree_node<T>* RB_Tree<T>::add(RB_Tree_node<T>* curr, T _key)
             add(curr->right_child, _key);
     }
 
-    new_node->color = 'R';
-    if (new_node->parent->color == 'B')
-        return new_node;
+    if (new_node->key == _key)
+    {
+        new_node->color = 'R';
+        if (new_node->parent->color != 'B')
+            red_red_violation(new_node);
+    }
+    return new_node;
+}
+
+template <typename T>
+void RB_Tree<T>::red_red_violation(RB_Tree_node<T>* curr)
+{
+    RB_Tree_node<T>* grandparent = curr->parent->parent;
+    if (curr->parent->key < grandparent->key)
+    {
+        if (!grandparent->right_child || grandparent->right_child->color == 'B')
+        {
+            if (curr->key < curr->parent->key)
+            {
+                curr->parent->color = 'B';
+                grandparent->color = 'R';
+                small_right_turn(curr->parent);
+                if (root->color == 'R')
+                    root->color = 'B';
+                return;
+            }
+            curr->color = 'B';
+            grandparent->color = 'R';
+            big_right_turn(curr);
+            if (root->color == 'R')
+                root->color = 'B';
+            return;
+        }
+        else
+        {
+            grandparent->right_child->color = 'B';
+            grandparent->color = 'R';
+            curr->parent->color = 'B';
+            if (grandparent->parent)
+            {
+                if (grandparent->parent->color == 'R')
+                    red_red_violation(grandparent);
+            }   
+            if (root->color == 'R')
+                root->color = 'B';
+            return;            
+        }
+        
+    }
     else 
     {
-        return new_node;
-        //red-red violation
+        if (!grandparent->left_child || grandparent->left_child->color == 'B')
+        {
+            if (curr->key > curr->parent->key)
+            {
+                curr->parent->color = 'B';
+                grandparent->color = 'R';
+                small_left_turn(curr->parent);
+                if (root->color == 'R')
+                    root->color = 'B';
+                return;
+            }
+            big_left_turn(curr);
+            curr->color = 'B';
+            grandparent->color = 'R';
+            if (root->color == 'R')
+                root->color = 'B';
+            return;
+        }
+        else
+        {
+            grandparent->left_child->color = 'B';
+            grandparent->color = 'R';
+            curr->parent->color = 'B';
+            if (grandparent->parent)
+            {
+                if (grandparent->parent->color == 'R')
+                    red_red_violation(grandparent);
+            }   
+            if (root->color == 'R')
+                root->color = 'B';
+            return;            
+        }
+        
     }
 }
 
@@ -100,9 +178,19 @@ void RB_Tree<T>::small_left_turn(RB_Tree_node<T>* curr)
     RB_Tree_node<T>* grandparent = parent->parent;
     curr->parent = grandparent;
     parent->right_child = curr->left_child;
+    if (curr->left_child)
+        curr->left_child->parent = parent;
     curr->left_child = parent;
     if (!grandparent)
         root = curr;
+    else 
+    {
+        if (parent->key < grandparent->key)
+            grandparent->left_child = curr;
+        else 
+            grandparent->right_child = curr;
+    }
+    parent->parent = curr;
 }
 
 template <typename T>
@@ -112,9 +200,19 @@ void RB_Tree<T>::small_right_turn(RB_Tree_node<T>* curr)
     RB_Tree_node<T>* grandparent = parent->parent;
     curr->parent = grandparent;
     parent->left_child = curr->right_child;
+    if (curr->right_child)
+        curr->right_child->parent = parent;
     curr->right_child = parent;
     if (!grandparent)
         root = curr;
+    else 
+    {
+        if (parent->key < grandparent->key)
+            grandparent->left_child = curr;
+        else 
+            grandparent->right_child = curr;
+    }
+    parent->parent = curr;
 }
 
 template <typename T>
@@ -125,7 +223,7 @@ void RB_Tree<T>::big_left_turn(RB_Tree_node<T>* curr)
 }
 
 template <typename T>
-void RB_Tree<T>::big_left_turn(RB_Tree_node<T>* curr)
+void RB_Tree<T>::big_right_turn(RB_Tree_node<T>* curr)
 {
     small_left_turn(curr);
     small_right_turn(curr);
