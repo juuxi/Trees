@@ -10,6 +10,7 @@ class Vector
 public:
     Vector() {arr = nullptr; size = 0;}
     Vector(size_t _size){arr = new V[_size]; full_size = _size; size = 0;}
+    ~Vector() {delete[] arr;}
     void add(size_t, V);
     void push_back(V);
     void remove(size_t);

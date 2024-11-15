@@ -16,6 +16,7 @@ public:
     void pop_front();
     S get_value() {return head->value;}
     bool is_empty() {if (head == nullptr) return true; return false;}
+    ~Stack();
 private:
     Node_solo<S>* front() {return head;}
 };
@@ -33,4 +34,11 @@ void Stack<S>::pop_front()
     Node_solo<S>* curr = head;
     head = head->next;
     delete curr;
+}
+
+template<typename S>
+Stack<S>::~Stack()
+{
+    while (!is_empty())
+        pop_front();
 }
