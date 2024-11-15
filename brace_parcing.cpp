@@ -93,6 +93,6 @@ int main()
     Binary_Tree.deep_traverse(Binary_Tree.get_root(), RB_input);
     std::cout << std::endl;
     for (int i = 0; i < RB_input.get_size(); i++)
-        RB_Tree.add(nullptr, RB_input[i]);
+        RB_Tree.add(RB_input[i]);
     return 0;
 }

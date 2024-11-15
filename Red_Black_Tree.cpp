@@ -20,7 +20,8 @@ class RB_Tree
 public: 
     RB_Tree() : root(nullptr) {}
     RB_Tree(T);
-    RB_Tree_node<T>* add(RB_Tree_node<T>*, T);
+    RB_Tree_node<T>* add(T);
+    RB_Tree_node<T>* search(RB_Tree_node<T>*, T);
 private:
     RB_Tree_node<T>* add_left_child(RB_Tree_node<T>*, T);
     RB_Tree_node<T>* add_right_child(RB_Tree_node<T>*, T);
@@ -55,10 +56,34 @@ RB_Tree_node<T>* RB_Tree<T>::add_right_child(RB_Tree_node<T>* curr, T _key)
 }
 
 template <typename T>
-RB_Tree_node<T>* RB_Tree<T>::add(RB_Tree_node<T>* curr, T _key)
+RB_Tree_node<T>* RB_Tree<T>::search(RB_Tree_node<T>* curr, T _key)
 {
     if (curr == nullptr)
         curr = root;
+    if (root == nullptr)
+        return nullptr;
+    if (curr->key == _key)
+        return curr;
+    if (_key < curr->key)
+    {
+        if (curr->left_child)
+            search(curr->left_child, _key);
+        else 
+            return curr;
+    }
+    else 
+    {
+        if (curr->right_child)
+            search(curr->right_child, _key);
+        else 
+            return curr;
+    }
+}
+
+template <typename T>
+RB_Tree_node<T>* RB_Tree<T>::add(T _key)
+{
+    RB_Tree_node<T>* curr = search(nullptr, _key);
     if (root == nullptr)
     {
         root = new RB_Tree_node<T>(_key);
@@ -67,29 +92,15 @@ RB_Tree_node<T>* RB_Tree<T>::add(RB_Tree_node<T>* curr, T _key)
     }
     
     RB_Tree_node<T>* new_node;
-
+    if (_key == curr->key)
+        return curr;
     if (_key < curr->key)
-    {
-        if (curr->left_child == nullptr)
-            new_node = add_left_child(curr, _key);
-        else 
-            add(curr->left_child, _key);
-    }
-
+        new_node = add_left_child(curr, _key);
     if (_key > curr->key)
-    {
-        if (curr->right_child == nullptr)
-            new_node = add_right_child(curr, _key);
-        else 
-            add(curr->right_child, _key);
-    }
-
-    if (new_node->key == _key)
-    {
-        new_node->color = 'R';
-        if (new_node->parent->color != 'B')
-            red_red_violation(new_node);
-    }
+        new_node = add_right_child(curr, _key);
+    new_node->color = 'R';
+    if (new_node->parent->color != 'B')
+        red_red_violation(new_node);
     return new_node;
 }
 
