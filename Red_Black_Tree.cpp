@@ -22,6 +22,7 @@ public:
     RB_Tree(T);
     RB_Tree_node<T>* add(T);
     RB_Tree_node<T>* search(RB_Tree_node<T>*, T);
+    void delete_node(T);
 private:
     RB_Tree_node<T>* add_left_child(RB_Tree_node<T>*, T);
     RB_Tree_node<T>* add_right_child(RB_Tree_node<T>*, T);
@@ -30,6 +31,8 @@ private:
     void big_left_turn(RB_Tree_node<T>*);
     void big_right_turn(RB_Tree_node<T>*);
     void red_red_violation(RB_Tree_node<T>*);
+    void black_delete_violation(RB_Tree_node<T>*);
+    RB_Tree_node<T>* search_leftmost_in_right(RB_Tree_node<T>*);
 };
 
 template <typename T>
@@ -238,4 +241,92 @@ void RB_Tree<T>::big_right_turn(RB_Tree_node<T>* curr)
 {
     small_left_turn(curr);
     small_right_turn(curr);
+}
+
+template <typename T>
+void RB_Tree<T>::delete_node(T _key)
+{
+    RB_Tree_node<T>* curr = search(nullptr, _key);
+    if (curr->key != _key)
+        return;
+    if (!curr->left_child && !curr->right_child)
+    {
+        if (curr->key < curr->parent->key)
+            curr->parent->left_child = nullptr;
+        else
+            curr->parent->right_child = nullptr;
+        delete curr;
+        return;
+    }
+    if (curr->left_child && !curr->right_child)
+    {
+        RB_Tree_node<T>* parent = curr->parent;
+        if (curr->color == 'R' || curr->left_child->color == 'R')
+        {
+            curr->left_child->parent = parent;
+            if (curr->key < parent->key)
+                parent->left_child = curr->left_child;
+            else 
+                parent->right_child = curr->left_child;
+            if (curr->color == 'B')
+                curr->left_child->color = 'B';
+            delete curr;
+            return;
+        }
+        curr->left_child->parent = parent;
+        if (curr->key < parent->key)
+            parent->left_child = curr->left_child;
+        else 
+            parent->right_child = curr->left_child;
+        black_delete_violation(curr->left_child);
+        delete curr;
+        return;
+    }
+
+    if (!curr->left_child && curr->right_child)
+    {
+        RB_Tree_node<T>* parent = curr->parent;
+        if (curr->color == 'R' || curr->right_child->color == 'R')
+        {
+            curr->right_child->parent = parent;
+            if (curr->key < parent->key)
+                parent->left_child = curr->right_child;
+            else 
+                parent->right_child = curr->right_child;
+            if (curr->color == 'B')
+                curr->right_child->color = 'B';
+            delete curr;
+            return;
+        }
+        curr->left_child->parent = parent;
+        if (curr->key < parent->key)
+            parent->left_child = curr->left_child;
+        else 
+            parent->right_child = curr->left_child;
+        black_delete_violation(curr->right_child);
+        delete curr;
+        return;
+    }
+    if (curr->left_child && curr->right_child)
+    {
+        RB_Tree_node<T>* sub = search_leftmost_in_right(curr);
+        T new_key = sub->key;
+        delete_node(sub->key);
+        curr->key = new_key;
+    }
+}
+
+template <typename T>
+RB_Tree_node<T>* RB_Tree<T>::search_leftmost_in_right(RB_Tree_node<T>* curr)
+{
+    curr = curr->right_child;
+    while (curr->left_child)
+        curr = curr->left_child;
+    return curr;
+}
+
+template <typename T>
+void RB_Tree<T>::black_delete_violation(RB_Tree_node<T>* curr)
+{
+    return;
 }
