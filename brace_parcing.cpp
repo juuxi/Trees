@@ -94,5 +94,8 @@ int main()
     std::cout << std::endl;
     for (int i = 0; i < RB_input.get_size(); i++)
         RB_Tree.add(RB_input[i]);
+    RB_Tree_node<int>* curr = RB_Tree.search(nullptr, 6);
+    curr->color = 'B';
+    RB_Tree.delete_node(7);
     return 0;
 }

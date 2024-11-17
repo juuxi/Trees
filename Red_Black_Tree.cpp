@@ -328,5 +328,73 @@ RB_Tree_node<T>* RB_Tree<T>::search_leftmost_in_right(RB_Tree_node<T>* curr)
 template <typename T>
 void RB_Tree<T>::black_delete_violation(RB_Tree_node<T>* curr)
 {
-    return;
+    RB_Tree_node<T>* parent = curr->parent;
+    RB_Tree_node<T>* brother;
+    if (curr->key < parent->key)
+        brother = parent->right_child;
+    else
+        brother = parent->left_child;
+    RB_Tree_node<T>* brother_left_child = brother->left_child;
+    RB_Tree_node<T>* brother_right_child = brother->right_child;
+
+    if ((parent->color == 'R' && brother->color == 'B' && !brother_left_child && !brother_right_child) || 
+    (parent->color == 'R' && brother->color == 'B' && brother_left_child->color == 'B' && brother_right_child->color == 'B'))
+    {
+        parent->color = 'B';
+        brother->color = 'R';
+        return;
+    }
+    
+    if (brother->color == 'R')
+    {
+        small_left_turn(brother);
+        brother->color = 'B';
+        parent->color = 'R';
+        black_delete_violation(parent);
+        return;
+    }
+
+    if ((parent->color == 'B' && brother->color == 'B' && !brother_left_child && !brother_right_child) || 
+    (parent->color == 'B' && brother->color == 'B' && brother_left_child->color == 'B' && brother_right_child->color == 'B'))
+    {
+        brother->color = 'R';
+        if (parent != root)
+            black_delete_violation(parent);
+        return;
+    }
+
+    if (curr->key < parent->key)
+    {
+        if (brother->color == 'B' && brother_right_child->color == 'R')
+        {
+            small_left_turn(brother);
+            brother->color = parent->color;
+            parent->color = 'B';
+            brother_right_child->color = 'B';
+            return;
+        }
+        if (brother->color == 'B' && brother_right_child->color == 'B' && brother_left_child->color == 'R')
+        {
+            small_right_turn(brother_left_child);
+            black_delete_violation(curr);
+            return;
+        }
+    }
+    else 
+    {
+        if (brother->color == 'B' && brother_left_child->color == 'R')
+        {
+            small_right_turn(brother);
+            brother->color = parent->color;
+            parent->color = 'B';
+            brother_left_child->color = 'B';
+            return;
+        }
+        if (brother->color == 'B' && brother_left_child->color == 'B' && brother_right_child->color == 'R')
+        {
+            small_left_turn(brother_right_child);
+            black_delete_violation(curr);
+            return;
+        }
+    }
 }
