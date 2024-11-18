@@ -251,10 +251,12 @@ void RB_Tree<T>::delete_node(T _key)
         return;
     if (!curr->left_child && !curr->right_child)
     {
+        if (curr->color == 'B')
+            black_delete_violation(curr);
         if (curr->key < curr->parent->key)
             curr->parent->left_child = nullptr;
         else
-            curr->parent->right_child = nullptr;
+            curr->parent->right_child = nullptr;    
         delete curr;
         return;
     }
@@ -336,9 +338,18 @@ void RB_Tree<T>::black_delete_violation(RB_Tree_node<T>* curr)
         brother = parent->left_child;
     RB_Tree_node<T>* brother_left_child = brother->left_child;
     RB_Tree_node<T>* brother_right_child = brother->right_child;
+    char brother_left_child_color;
+    char brother_right_child_color;
+    if (!brother_left_child)
+        brother_left_child_color = 'B';
+    else 
+        brother_left_child_color = brother_left_child->color;
+    if (!brother_right_child)
+        brother_right_child_color = 'B';
+    else 
+        brother_right_child_color = brother_right_child->color;
 
-    if ((parent->color == 'R' && brother->color == 'B' && !brother_left_child && !brother_right_child) || 
-    (parent->color == 'R' && brother->color == 'B' && brother_left_child->color == 'B' && brother_right_child->color == 'B'))
+    if (parent->color == 'R' && brother->color == 'B' && brother_left_child_color == 'B' && brother_right_child_color == 'B')
     {
         parent->color = 'B';
         brother->color = 'R';
@@ -350,12 +361,11 @@ void RB_Tree<T>::black_delete_violation(RB_Tree_node<T>* curr)
         small_left_turn(brother);
         brother->color = 'B';
         parent->color = 'R';
-        black_delete_violation(parent);
+        black_delete_violation(curr);
         return;
     }
 
-    if ((parent->color == 'B' && brother->color == 'B' && !brother_left_child && !brother_right_child) || 
-    (parent->color == 'B' && brother->color == 'B' && brother_left_child->color == 'B' && brother_right_child->color == 'B'))
+    if (parent->color == 'B' && brother->color == 'B' && brother_left_child_color == 'B' && brother_right_child_color == 'B')
     {
         brother->color = 'R';
         if (parent != root)
@@ -376,6 +386,8 @@ void RB_Tree<T>::black_delete_violation(RB_Tree_node<T>* curr)
         if (brother->color == 'B' && brother_right_child->color == 'B' && brother_left_child->color == 'R')
         {
             small_right_turn(brother_left_child);
+            brother_left_child->color = 'B';
+            brother->color = 'R';
             black_delete_violation(curr);
             return;
         }
@@ -393,6 +405,8 @@ void RB_Tree<T>::black_delete_violation(RB_Tree_node<T>* curr)
         if (brother->color == 'B' && brother_left_child->color == 'B' && brother_right_child->color == 'R')
         {
             small_left_turn(brother_right_child);
+            brother_right_child->color = 'B';
+            brother->color = 'R';
             black_delete_violation(curr);
             return;
         }
