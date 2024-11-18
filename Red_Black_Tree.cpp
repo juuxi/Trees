@@ -1,4 +1,6 @@
 #include <cstddef>
+#include <queue>
+#include <iostream>
 
 template <typename T>
 struct RB_Tree_node
@@ -23,6 +25,7 @@ public:
     RB_Tree_node<T>* add(T);
     RB_Tree_node<T>* search(RB_Tree_node<T>*, T);
     void delete_node(T);
+    void breadth_first_search();
 private:
     RB_Tree_node<T>* add_left_child(RB_Tree_node<T>*, T);
     RB_Tree_node<T>* add_right_child(RB_Tree_node<T>*, T);
@@ -410,5 +413,22 @@ void RB_Tree<T>::black_delete_violation(RB_Tree_node<T>* curr)
             black_delete_violation(curr);
             return;
         }
+    }
+}
+
+template <typename T>
+void RB_Tree<T>::breadth_first_search()
+{
+    std::queue<RB_Tree_node<T>*> q;
+    q.push(root);
+    while(!q.empty())
+    {
+        RB_Tree_node<T>* curr = q.front();
+        q.pop();
+        std::cout << curr->key << " ";
+        if (curr->left_child)
+            q.push(curr->left_child);
+        if (curr->right_child)
+            q.push(curr->right_child);
     }
 }
