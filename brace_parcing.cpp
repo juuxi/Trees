@@ -1,7 +1,6 @@
 #include <iostream>
 #include <fstream>
 #include "Binary_Tree.cpp"
-#include "stack.cpp"
 #include "Red_Black_Tree.cpp"
 
 int main()
@@ -94,5 +93,11 @@ int main()
     std::cout << std::endl;
     for (int i = 0; i < RB_input.get_size(); i++)
         RB_Tree.add(RB_input[i]);
+    RB_Tree.depth_first_search_forward();
+    std::cout << std::endl;
+    RB_Tree.depth_first_search_central();
+    std::cout << std::endl;
+    RB_Tree.depth_first_search_backward();
+    std::cout << std::endl;
     return 0;
 }

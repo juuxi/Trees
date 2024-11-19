@@ -16,6 +16,7 @@ public:
     void pop_front();
     S get_value() {return head->value;}
     bool is_empty() {if (head == nullptr) return true; return false;}
+    S top() {return head->value;}
     ~Stack();
 private:
     Node_solo<S>* front() {return head;}

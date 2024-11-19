@@ -1,6 +1,7 @@
 #include <cstddef>
 #include <queue>
 #include <iostream>
+#include "stack.cpp"
 
 template <typename T>
 struct RB_Tree_node
@@ -26,6 +27,9 @@ public:
     RB_Tree_node<T>* search(RB_Tree_node<T>*, T);
     void delete_node(T);
     void breadth_first_search();
+    void depth_first_search_forward();
+    void depth_first_search_central();
+    void depth_first_search_backward();
 private:
     RB_Tree_node<T>* add_left_child(RB_Tree_node<T>*, T);
     RB_Tree_node<T>* add_right_child(RB_Tree_node<T>*, T);
@@ -435,5 +439,79 @@ void RB_Tree<T>::breadth_first_search()
             q.push(curr->left_child);
         if (curr->right_child)
             q.push(curr->right_child);
+    }
+}
+
+template <typename T>
+void RB_Tree<T>::depth_first_search_forward()
+{
+    Stack<RB_Tree_node<T>*> s;
+    s.push_front(root);
+    while (!s.is_empty())
+    {
+        RB_Tree_node<T>* curr = s.top();
+        std::cout << curr->key << " ";
+        s.pop_front();
+        if (curr->right_child)
+            s.push_front(curr->right_child);
+        if (curr->left_child)
+            s.push_front(curr->left_child);
+    }
+}
+
+template <typename T>
+void RB_Tree<T>::depth_first_search_central()
+{
+    RB_Tree_node<T>* last_visited_left = nullptr;
+    RB_Tree_node<T>* last_visited_right = nullptr;
+    Stack<RB_Tree_node<T>*> s;
+    s.push_front(root);
+    while (!s.is_empty())
+    {
+        RB_Tree_node<T>* curr = s.top();
+        if (curr->left_child && curr->left_child != last_visited_left && curr->right_child != last_visited_right)
+        {
+            s.push_front(curr->left_child);
+        }
+        else
+        {
+            std::cout << curr->key << " ";
+            if (curr->parent && curr->key < curr->parent->key)
+                last_visited_left = curr;
+            else 
+                last_visited_right = curr;
+            s.pop_front();
+            if (curr->right_child && curr->right_child != last_visited_right)
+                s.push_front(curr->right_child);
+        }
+    }
+}
+
+template <typename T>
+void RB_Tree<T>::depth_first_search_backward()
+{
+    RB_Tree_node<T>* last_visited_left = nullptr;
+    RB_Tree_node<T>* last_visited_right = nullptr;
+    Stack<RB_Tree_node<T>*> s;
+    s.push_front(root);
+    while (!s.is_empty())
+    {
+        RB_Tree_node<T>* curr = s.top();
+        if (curr->left_child && curr->left_child != last_visited_left && curr->right_child != last_visited_right)
+        {
+            s.push_front(curr->left_child);
+        }
+        else if (curr->right_child && curr->right_child != last_visited_right)
+                s.push_front(curr->right_child);
+        else
+        {
+            std::cout << curr->key << " ";
+            if (curr->parent && curr->key < curr->parent->key)
+                last_visited_left = curr;
+            else 
+                last_visited_right = curr;
+            s.pop_front();
+            
+        }
     }
 }
