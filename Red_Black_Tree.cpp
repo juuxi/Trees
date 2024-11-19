@@ -278,12 +278,13 @@ void RB_Tree<T>::delete_node(T _key)
             delete curr;
             return;
         }
+        black_delete_violation(curr->left_child);
         curr->left_child->parent = parent;
         if (curr->key < parent->key)
             parent->left_child = curr->left_child;
         else 
             parent->right_child = curr->left_child;
-        black_delete_violation(curr->left_child);
+        //black_delete_violation(curr->left_child);
         delete curr;
         return;
     }
@@ -303,12 +304,13 @@ void RB_Tree<T>::delete_node(T _key)
             delete curr;
             return;
         }
+        black_delete_violation(curr->left_child);
         curr->left_child->parent = parent;
         if (curr->key < parent->key)
             parent->left_child = curr->left_child;
         else 
             parent->right_child = curr->left_child;
-        black_delete_violation(curr->right_child);
+        //black_delete_violation(curr->right_child);
         delete curr;
         return;
     }
@@ -361,7 +363,10 @@ void RB_Tree<T>::black_delete_violation(RB_Tree_node<T>* curr)
     
     if (brother->color == 'R')
     {
-        small_left_turn(brother);
+        if (curr->key < parent->key)
+            small_left_turn(brother);
+        else
+            small_right_turn(brother);
         brother->color = 'B';
         parent->color = 'R';
         black_delete_violation(curr);

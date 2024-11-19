@@ -94,7 +94,5 @@ int main()
     std::cout << std::endl;
     for (int i = 0; i < RB_input.get_size(); i++)
         RB_Tree.add(RB_input[i]);
-    RB_Tree.breadth_first_search();
-    std::cout << std::endl;
     return 0;
 }
