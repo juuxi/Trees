@@ -14,6 +14,7 @@ public:
     void add(size_t, V);
     void push_back(V);
     void remove(size_t);
+    bool incl(V);
     size_t get_size() {return size;}
     V& operator[] (size_t index);
     template <typename V2>
@@ -77,4 +78,15 @@ std::ostream& operator<< (std::ostream& os, Vector<V>& vec)
     }
     os << std::endl;
     return os;
+}
+
+template<typename V>
+bool Vector<V>::incl(V _value)
+{
+    for (size_t i = 0; i < size; i++)
+    {
+        if (_value == arr[i])
+            return true;
+    }
+    return false;
 }

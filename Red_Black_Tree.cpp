@@ -462,26 +462,22 @@ void RB_Tree<T>::depth_first_search_forward()
 template <typename T>
 void RB_Tree<T>::depth_first_search_central()
 {
-    RB_Tree_node<T>* last_visited_left = nullptr;
-    RB_Tree_node<T>* last_visited_right = nullptr;
+    Vector<RB_Tree_node<T>*> visited(1);
     Stack<RB_Tree_node<T>*> s;
     s.push_front(root);
     while (!s.is_empty())
     {
         RB_Tree_node<T>* curr = s.top();
-        if (curr->left_child && curr->left_child != last_visited_left && curr->right_child != last_visited_right)
+        if (curr->left_child && !visited.incl(curr->left_child))
         {
             s.push_front(curr->left_child);
         }
         else
         {
             std::cout << curr->key << " ";
-            if (curr->parent && curr->key < curr->parent->key)
-                last_visited_left = curr;
-            else 
-                last_visited_right = curr;
+            visited.push_back(curr);
             s.pop_front();
-            if (curr->right_child && curr->right_child != last_visited_right)
+            if (curr->right_child && !visited.incl(curr->right_child))
                 s.push_front(curr->right_child);
         }
     }
@@ -490,26 +486,22 @@ void RB_Tree<T>::depth_first_search_central()
 template <typename T>
 void RB_Tree<T>::depth_first_search_backward()
 {
-    RB_Tree_node<T>* last_visited_left = nullptr;
-    RB_Tree_node<T>* last_visited_right = nullptr;
+    Vector<RB_Tree_node<T>*> visited(1);
     Stack<RB_Tree_node<T>*> s;
     s.push_front(root);
     while (!s.is_empty())
     {
         RB_Tree_node<T>* curr = s.top();
-        if (curr->left_child && curr->left_child != last_visited_left && curr->right_child != last_visited_right)
+        if (curr->left_child && !visited.incl(curr->left_child))
         {
             s.push_front(curr->left_child);
         }
-        else if (curr->right_child && curr->right_child != last_visited_right)
+        else if (curr->right_child && !visited.incl(curr->right_child))
                 s.push_front(curr->right_child);
         else
         {
             std::cout << curr->key << " ";
-            if (curr->parent && curr->key < curr->parent->key)
-                last_visited_left = curr;
-            else 
-                last_visited_right = curr;
+            visited.push_back(curr);
             s.pop_front();
             
         }
