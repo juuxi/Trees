@@ -47,7 +47,15 @@ int main()
                 curr_node_val = 0;
             }
             if (input[i-1] == ')')
-                right_child_flag = true;
+            {
+                if (!curr_parent->right_child)
+                    right_child_flag = true;
+                else 
+                {
+                    std::cout << "Error!" << std::endl;
+                    return 2;
+                }
+            }
         }
 
         else if (input[i] == ')')
