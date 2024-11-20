@@ -98,6 +98,6 @@ int main()
     RB_Tree.depth_first_search_central();
     std::cout << std::endl;
     RB_Tree.depth_first_search_backward();
-    std::cout << std::endl;
+    std::cout << std::endl; 
     return 0;
 }

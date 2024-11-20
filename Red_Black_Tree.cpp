@@ -282,13 +282,13 @@ void RB_Tree<T>::delete_node(T _key)
             delete curr;
             return;
         }
-        black_delete_violation(curr->left_child);
+        //black_delete_violation(curr->left_child);
         curr->left_child->parent = parent;
         if (curr->key < parent->key)
             parent->left_child = curr->left_child;
         else 
             parent->right_child = curr->left_child;
-        //black_delete_violation(curr->left_child);
+        black_delete_violation(curr->left_child);
         delete curr;
         return;
     }
@@ -308,13 +308,13 @@ void RB_Tree<T>::delete_node(T _key)
             delete curr;
             return;
         }
-        black_delete_violation(curr->left_child);
-        curr->left_child->parent = parent;
+        //black_delete_violation(curr->left_child);
+        curr->right_child->parent = parent;
         if (curr->key < parent->key)
-            parent->left_child = curr->left_child;
+            parent->left_child = curr->right_child;
         else 
-            parent->right_child = curr->left_child;
-        //black_delete_violation(curr->right_child);
+            parent->right_child = curr->right_child;
+        black_delete_violation(curr->right_child);
         delete curr;
         return;
     }
