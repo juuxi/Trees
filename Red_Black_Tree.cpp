@@ -23,6 +23,7 @@ class RB_Tree
 public: 
     RB_Tree() : root(nullptr) {}
     RB_Tree(T);
+    ~RB_Tree();
     RB_Tree_node<T>* add(T);
     RB_Tree_node<T>* search(RB_Tree_node<T>*, T);
     void delete_node(T);
@@ -40,6 +41,7 @@ private:
     void red_red_violation(RB_Tree_node<T>*);
     void black_delete_violation(RB_Tree_node<T>*);
     RB_Tree_node<T>* search_leftmost_in_right(RB_Tree_node<T>*);
+    RB_Tree_node<T>* search_rightmost_in_left(RB_Tree_node<T>*);
 };
 
 template <typename T>
@@ -47,6 +49,13 @@ RB_Tree<T>::RB_Tree(T _key)
 {
     root = new RB_Tree_node<T>(_key);
     root->color = 'B';
+}
+
+template <typename T>
+RB_Tree<T>::~RB_Tree()
+{
+    while (root)
+        delete_node(root->key);
 }
 
 template <typename T>
@@ -256,6 +265,28 @@ void RB_Tree<T>::delete_node(T _key)
     RB_Tree_node<T>* curr = search(nullptr, _key);
     if (curr->key != _key)
         return;
+    if (!curr->parent)
+    {
+        if (curr->right_child)
+        {
+            RB_Tree_node<T>* sub = search_leftmost_in_right(curr);
+            T new_key = sub->key;
+            delete_node(sub->key);
+            curr->key = new_key;
+            return;
+        }
+        if (curr->left_child)
+        {
+            RB_Tree_node<T>* sub = search_rightmost_in_left(curr);
+            T new_key = sub->key;
+            delete_node(sub->key);
+            curr->key = new_key;
+            return;
+        }
+        delete curr;
+        root = nullptr;
+        return;
+    }
     if (!curr->left_child && !curr->right_child)
     {
         if (curr->color == 'B')
@@ -337,6 +368,15 @@ RB_Tree_node<T>* RB_Tree<T>::search_leftmost_in_right(RB_Tree_node<T>* curr)
 }
 
 template <typename T>
+RB_Tree_node<T>* RB_Tree<T>::search_rightmost_in_left(RB_Tree_node<T>* curr)
+{
+    curr = curr->left_child;
+    while (curr->right_child)
+        curr = curr->right_child;
+    return curr;
+}
+
+template <typename T>
 void RB_Tree<T>::black_delete_violation(RB_Tree_node<T>* curr)
 {
     RB_Tree_node<T>* parent = curr->parent;
@@ -395,7 +435,7 @@ void RB_Tree<T>::black_delete_violation(RB_Tree_node<T>* curr)
             brother_right_child->color = 'B';
             return;
         }
-        if (brother->color == 'B' && brother_right_child->color == 'B' && brother_left_child->color == 'R')
+        if (brother->color == 'B' && brother_right_child_color == 'B' && brother_left_child_color == 'R')
         {
             small_right_turn(brother_left_child);
             brother_left_child->color = 'B';
@@ -406,7 +446,7 @@ void RB_Tree<T>::black_delete_violation(RB_Tree_node<T>* curr)
     }
     else 
     {
-        if (brother->color == 'B' && brother_left_child->color == 'R')
+        if (brother->color == 'B' && brother_left_child_color == 'R')
         {
             small_right_turn(brother);
             brother->color = parent->color;
@@ -414,7 +454,7 @@ void RB_Tree<T>::black_delete_violation(RB_Tree_node<T>* curr)
             brother_left_child->color = 'B';
             return;
         }
-        if (brother->color == 'B' && brother_left_child->color == 'B' && brother_right_child->color == 'R')
+        if (brother->color == 'B' && brother_left_child_color == 'B' && brother_right_child_color == 'R')
         {
             small_left_turn(brother_right_child);
             brother_right_child->color = 'B';
